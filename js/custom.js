@@ -1,7 +1,7 @@
 var model;
 var firstPrediction = true;
 
-// start by asymchronously loading our model and running a dummy 
+// start by asymchronously loading our model and running a dummy
 // prediction to prime the pump.
 (async () => {
   model = await tf.loadLayersModel('model/model.json')
@@ -49,8 +49,8 @@ canvas.on('mouse:down', () => {drawing = true;});
 canvas.on('mouse:move', onMouseMove);
 
 // Clear button callback
-$("#clear-canvas").click(function(){ 
-  canvas.clear(); 
+$("#clear-canvas").click(function(){
+  canvas.clear();
   canvas.backgroundColor = "#ffffff";
   canvas.renderAll();
   updateChart(zeros);
@@ -59,25 +59,7 @@ $("#clear-canvas").click(function(){
 
 var tensor_pixels = null;
 
-function predict(){
-  // Change status indicator
-  if (!firstPrediction) {
-    $("#status").removeClass().toggleClass("fa fa-spinner fa-spin");
-  }
 
-  pixels = processImage(canvas);
-  tensor_pixels = tf.scalar(1).sub(tf.browser.fromPixels(pixels, 1).toFloat().div(255))
-  //linear_pixels = tf.reshape(tensor_pixels, [1, 28*28])
-  pixels = tf.reshape(tensor_pixels, [1, 28, 28, 1])
-  var prediction = model.predict(pixels).dataSync()
-  if (firstPrediction) {
-    firstPrediction = false;
-  } else {
-    $("#status").removeClass().toggleClass("fa fa-check");
-    $('#svg-chart').show();
-    updateChart(prediction);
-  }
-};
 
 // Initialize d3 bar chart
 $('#svg-chart').hide();
@@ -92,16 +74,16 @@ var svg = d3.select("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", 
+    .attr("transform",
        "translate(" + margin.left + "," + margin.top + ")");
 
 var x = d3.scale.ordinal()
           .rangeRoundBands([0, width], .1)
           .domain(labels);
-    
+
 var y = d3.scale.linear()
           .range([height, 0])
-          .domain([0,1]);  
+          .domain([0,1]);
 
 var xAxis = d3.svg.axis()
               .scale(x)
@@ -131,3 +113,25 @@ function updateChart(d) {
     .attr("y", function(d) { return y(d); })
     .attr("height", function(d) { return height - y(d); });
 }
+
+
+
+function predict(){
+  // Change status indicator
+  if (!firstPrediction) {
+    $("#status").removeClass().toggleClass("fa fa-spinner fa-spin");
+  }
+
+  pixels = processImage(canvas);
+  tensor_pixels = tf.scalar(1).sub(tf.browser.fromPixels(pixels, 1).toFloat().div(255))
+  pixels = tf.reshape(tensor_pixels, [1, 28*28])
+  // pixels = tf.reshape(tensor_pixels, [28, 28])
+  var prediction = model.predict(pixels).dataSync()
+  if (firstPrediction) {
+    firstPrediction = false;
+  } else {
+    $("#status").removeClass().toggleClass("fa fa-check");
+    $('#svg-chart').show();
+    updateChart(prediction);
+  }
+};
