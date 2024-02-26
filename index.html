@@ -10,15 +10,6 @@
 </head>
 
 <body>
-  <a href="https://bit.ly/mco-mnist-draw"><img class="header" height="100" src="tf.js_mnist.png"></a>
-  <p class="header text">
-    Draw a digit by hand and have it classified in real time, as you draw, by a machine learning model trained against
-    the <a href="https://en.wikipedia.org/wiki/MNIST_database">MNIST</a> dataset.
-    The model used for this page is a convolutional neural network (CNN) built using Keras/TensorFlow on a
-    Google Tensor Processing Unit (TPU). It's explained in depth and is available for you to build for
-    yourself at <a href="https://bit.ly/mco-mnist-lab">bit.ly/mco-mnist-lab</a>.
-    Source code on <a href="https://github.com/marcacohen/mnist-draw">Github</a>.
-  </p>
   <div class="container">
     <div class="content">
       <div id="drawing-space">
@@ -28,7 +19,7 @@
                                     position: absolute;
                                     z-index: 1;
                                     text-align: center;">
-Loading model...
+          Loading model...
         </div>
         <canvas id="canvas" width="336" height="336"></canvas>
       </div>
@@ -42,10 +33,6 @@ Loading model...
     </div>
     <canvas id="scaled-canvas" style="display:none" width="28" height="28"></canvas>
   </div>
-  <div class="footer">
-    <br>
-    Made with <span id="heart">&hearts;</span> by <a href="https://mco.dev">Marc</a>.
-  </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -53,4 +40,5 @@ Loading model...
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2.3"> </script>
   <script src="js/custom.js"></script>
 </body>
+
 </html>
