@@ -10,17 +10,12 @@
 </head>
 
 <body>
+  <header>
+
+  </header>
   <div class="container">
     <div class="content">
       <div id="drawing-space">
-        <div id="model-load" style="height: 336;
-                                    width: 336;
-                                    background-color: #0000000d;
-                                    position: absolute;
-                                    z-index: 1;
-                                    text-align: center;">
-          Loading model...
-        </div>
         <canvas id="canvas" width="336" height="336"></canvas>
       </div>
       <div class="instructions panel text">
@@ -31,13 +26,13 @@
         </div>
       </div>
     </div>
-    <canvas id="scaled-canvas" style="display:none" width="28" height="28"></canvas>
+    <canvas id="scaled-canvas" style="width: 280px;" width="28" height="28"></canvas>
   </div>
+  <footer></footer>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://d3js.org/d3.v3.min.js"></script>
   <script src="js/fabric.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2.3"> </script>
   <script src="js/custom.js"></script>
 </body>
 

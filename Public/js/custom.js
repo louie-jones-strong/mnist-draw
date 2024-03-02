@@ -1,15 +1,6 @@
 var model;
-var firstPrediction = true;
 
-// start by asymchronously loading our model and running a dummy
-// prediction to prime the pump.
-(async () => {
-  model = await tf.loadLayersModel('models/model1/model.json')
-  document.getElementById('model-load').style.display = 'none';
-  predict();
-})();
-
-function processImage(canvas) {
+function ProcessImage(canvas) {
   // Convert on-screen image to something we can feed into our model.
   ctx = canvas.getContext('2d');
   const ctxScaled = document.getElementById('scaled-canvas').getContext('2d')
@@ -25,7 +16,7 @@ function processImage(canvas) {
 // Canvas setup
 var canvas = new fabric.Canvas('canvas');
 canvas.isDrawingMode = true;
-canvas.freeDrawingBrush.width = 12;
+canvas.freeDrawingBrush.width = 25;
 canvas.freeDrawingBrush.color = "#000000";
 canvas.backgroundColor = "#ffffff";
 canvas.renderAll();
@@ -39,12 +30,12 @@ var drawing = false;
 function onMouseMove() {
   if (drawing && mouseMoveCount++ > movesPerPrediction) {
     canvas.freeDrawingBrush._finalizeAndAddPath();
-    (async () => { predict(); })();
+    (async () => { Predict(); })();
     mouseMoveCount = 0;
   }
 }
 
-canvas.on('mouse:up',   () => {drawing = false; predict();});
+canvas.on('mouse:up',   () => {drawing = false; Predict();});
 canvas.on('mouse:down', () => {drawing = true;});
 canvas.on('mouse:move', onMouseMove);
 
@@ -53,7 +44,7 @@ $("#clear-canvas").click(function(){
   canvas.clear();
   canvas.backgroundColor = "#ffffff";
   canvas.renderAll();
-  updateChart(zeros);
+  Predict();
   $("#status").removeClass();
 });
 
@@ -62,7 +53,6 @@ var tensor_pixels = null;
 
 
 // Initialize d3 bar chart
-$('#svg-chart').hide();
 var labels = ['0','1','2','3','4','5','6','7','8','9'];
 var zeros = [0,0,0,0,0,0,0,0,0,0,0];
 
@@ -116,22 +106,45 @@ function updateChart(d) {
 
 
 
-function predict(){
+function Predict(){
   // Change status indicator
-  if (!firstPrediction) {
-    $("#status").removeClass().toggleClass("fa fa-spinner fa-spin");
-  }
+  $("#status").removeClass().toggleClass("fa fa-spinner fa-spin");
 
-  pixels = processImage(canvas);
-  tensor_pixels = tf.scalar(1).sub(tf.browser.fromPixels(pixels, 1).toFloat().div(255))
-  pixels = tf.reshape(tensor_pixels, [1, 28*28])
-  // pixels = tf.reshape(tensor_pixels, [28, 28])
-  var prediction = model.predict(pixels).dataSync()
-  if (firstPrediction) {
-    firstPrediction = false;
-  } else {
-    $("#status").removeClass().toggleClass("fa fa-check");
-    $('#svg-chart').show();
-    updateChart(prediction);
-  }
+  let scaledCanvas = ProcessImage(canvas);
+
+  var fac = (1.) / 1.;
+  // var url = scaledCanvas.toDataURLWithMultiplier('png', fac);
+  var url = scaledCanvas.toDataURL();
+
+
+  // encode the image as png data url
+
+
+  $.post('predict', url)
+    .done(function (json) {
+      if (json.result) {
+        $("#status").removeClass().toggleClass("fa fa-check");
+        $('#svg-chart').show();
+        updateChart(json.data);
+
+        // console.log('Prediction: ' + json.data.map(d => d.toFixed(2)))
+      } else {
+         $("#status").removeClass().toggleClass("fa fa-exclamation-triangle");
+         console.log('Script Error: ' + json.error)
+      }
+    })
+    .fail(function (xhr, textStatus, error) {
+      console.log("POST Error: " + xhr.responseText + ", " + textStatus + ", " + error);
+    }
+  );
+
+
+
+  // prediction = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0];
+  // $("#status").removeClass().toggleClass("fa fa-check");
+  // $('#svg-chart').show();
+  // updateChart(prediction);
 };
+
+
+Predict();

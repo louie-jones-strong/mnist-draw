@@ -4,7 +4,6 @@ import ModelService
 import json
 import io
 import json
-import sys
 import os
 import re
 import base64
@@ -95,7 +94,7 @@ if __name__ == "__main__":
     print("Server started http://%s:%s" % (hostName, serverPort))
 
     modelService = ModelService.ModelService()
-    modelService.GetModel()
+    modelService.Setup()
 
     try:
         webServer.serve_forever()
