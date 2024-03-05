@@ -11,7 +11,8 @@ import numpy as np
 from PIL import Image
 
 hostName = "localhost"
-serverPort = 8080
+serverPort = 8081
+modelPath = "model2.keras"
 
 class ModelServer(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -94,7 +95,7 @@ if __name__ == "__main__":
     print("Server started http://%s:%s" % (hostName, serverPort))
 
     modelService = ModelService.ModelService()
-    modelService.Setup()
+    modelService.Setup(modelPath)
 
     try:
         webServer.serve_forever()

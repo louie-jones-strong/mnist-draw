@@ -5,13 +5,13 @@ class ModelService(metaclass=Singleton.Singleton):
     InputShape = None
     UseNoisyImages = False
 
-    def Setup(self):
+    def Setup(self, modelPath):
         print("Loading model...")
         import tensorflow.keras.models as models
         import os
         import numpy as np
         self.Np = np
-        modelPath = os.path.join("Models", "model.keras")
+        modelPath = os.path.join("Models", modelPath)
         self.Model = models.load_model(modelPath)
 
         self.InputShape = self.Model.layers[0].input_shape
