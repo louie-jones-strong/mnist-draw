@@ -11,8 +11,8 @@ import numpy as np
 from PIL import Image
 
 hostName = "localhost"
-serverPort = 8081
-modelPath = "model2.keras"
+serverPort = 8080
+modelPath = "model.keras"
 
 class ModelServer(BaseHTTPRequestHandler):
     def do_GET(self):
